@@ -5,6 +5,7 @@ Generated subscriptions contain domain facts and selections derived from:
 - [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community), MIT.
 - [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script), GPL-2.0.
 - [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat), GPL-3.0.
+- [Microsoft 365 IP Address and URL web service](https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-ip-web-service?view=o365-worldwide), for official Microsoft 365 URL patterns.
 
 IP subscriptions use these published sources:
 

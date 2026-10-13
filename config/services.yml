@@ -111,10 +111,18 @@ sources:
     format: clash
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list
     priority: 2
+  official:microsoft-365-domains:
+    format: microsoft-365-domains
+    url: https://endpoints.office.com/endpoints/worldwide
+    priority: 0
   blackmatrix7:OpenAI:
     format: clash
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list
     priority: 2
+  v2fly:openai:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/openai
+    priority: 1
   v2fly:meta:
     format: v2fly
     url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/meta
@@ -298,13 +306,20 @@ providers:
     all:
       output: output/microsoft/microsoft-all-domains.txt
       sources:
+      - official:microsoft-365-domains
       - v2fly:microsoft
       - blackmatrix7:Microsoft
+      limitations:
+      - Microsoft 365 includes shared third-party dependencies and is not an exclusive ownership list.
   openai:
     all:
       output: output/openai/openai-all-domains.txt
       sources:
+      - v2fly:openai
       - blackmatrix7:OpenAI
+      limitations:
+      - No verified OpenAI client-destination IP allocation is published; crawler and action egress feeds are excluded.
+      - Shared third-party domains in community sources can route unrelated traffic.
   meta:
     all:
       output: output/meta/meta-all-domains.txt

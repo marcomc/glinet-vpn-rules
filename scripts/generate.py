@@ -9,7 +9,9 @@ import json
 import re
 import tempfile
 import urllib.error
+import urllib.parse
 import urllib.request
+import uuid
 from collections import defaultdict
 from pathlib import Path
 
@@ -22,7 +24,7 @@ else:
 
 ROOT = Path(__file__).resolve().parents[1]
 HOST = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$", re.I)
-USER_AGENT = "glinet-vpn-subscription-generator/1.0.0 (public GitHub Actions generator)"
+USER_AGENT = "glinet-vpn-subscription-generator/1.1.0 (public GitHub Actions generator)"
 
 
 def normalize(value: str) -> str | None:
@@ -115,6 +117,29 @@ def parse_clash(text: str) -> tuple[set[str], list[dict]]:
     return domains, unsupported
 
 
+def parse_microsoft_365_domains(text: str) -> tuple[set[str], list[dict]]:
+    """Read URL host patterns from Microsoft's official endpoint service."""
+    records = json.loads(text)
+    if not isinstance(records, list) or not records:
+        raise ValueError("invalid Microsoft 365 endpoint document")
+    domains, unsupported = set(), []
+    for row in records:
+        if not isinstance(row, dict) or not isinstance(row.get("urls", []), list):
+            raise ValueError("invalid Microsoft 365 endpoint record")
+        for item in row.get("urls", []):
+            if not isinstance(item, str):
+                raise ValueError("invalid Microsoft 365 URL pattern")
+            candidate = item.removeprefix("*.")
+            domain = normalize(candidate)
+            if domain:
+                domains.add(domain)
+            else:
+                unsupported.append({"rule": item, "reason": invalid_domain_reason(candidate)})
+    if not domains:
+        raise ValueError("empty Microsoft 365 endpoint document")
+    return domains, unsupported
+
+
 class Resolver:
     def __init__(self, sources: dict):
         self.sources = sources
@@ -134,7 +159,11 @@ class Resolver:
         if "url" in spec:
             url = spec["url"]
             self.urls[key] = url
-            content = fetch(url)
+            if spec["format"] == "microsoft-365-domains":
+                query = urllib.parse.urlencode({"ClientRequestId": str(uuid.uuid4())})
+                content = fetch(url + "?" + query)
+            else:
+                content = fetch(url)
             if spec["format"] == "v2fly":
                 parsed, missing, includes = parse_v2fly(content)
                 self.unsupported[key].extend(missing)
@@ -150,6 +179,10 @@ class Resolver:
                 result.update(parsed)
             elif spec["format"] == "clash":
                 parsed, missing = parse_clash(content)
+                self.unsupported[key].extend(missing)
+                result.update(parsed)
+            elif spec["format"] == "microsoft-365-domains":
+                parsed, missing = parse_microsoft_365_domains(content)
                 self.unsupported[key].extend(missing)
                 result.update(parsed)
             else:

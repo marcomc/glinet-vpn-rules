@@ -10,6 +10,7 @@ Other OpenWrt VPN clients can use the published lists only when their policy imp
 - [Generate and validate lists](#generate-and-validate-lists)
 - [Development](#development)
 - [Compatibility and data limitations](#compatibility-and-data-limitations)
+- [Source coverage](#source-coverage)
 - [Publication](#publication)
 
 ## Repositories
@@ -53,6 +54,16 @@ python -m unittest discover -s tests -v
 - Domain policies can be bypassed by external or encrypted DNS, direct IP connections, or IPv6 paths not routed through the VPN. A successful import does not prove traffic is routed through the selected tunnel.
 
 Source licensing and attribution for generated data are documented in [the lists repository](https://github.com/marcomc/glinet-vpn-subscription-lists/blob/main/DATA-LICENSES.md).
+
+## Source coverage
+
+The [source audit](docs/source-audit-1.1.0.md) records the usable official and
+community sources for each configured provider. OpenAI domains combine two
+community feeds, but OpenAI's published crawler and integration IP files list
+addresses that contact other systems, not destinations for a ChatGPT client.
+Microsoft's official 365 feed supplements its domain rules and is scoped to
+Microsoft 365, not every Microsoft product. These lists cannot promise complete
+coverage of changing provider infrastructure or third-party dependencies.
 
 ## Publication
 

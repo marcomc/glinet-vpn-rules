@@ -7,7 +7,7 @@ import scripts.generate as module
 
 import yaml
 
-from scripts.generate import Resolver, generate, normalize, parse_clash, parse_meta, parse_v2fly
+from scripts.generate import Resolver, generate, normalize, parse_clash, parse_meta, parse_microsoft_365_domains, parse_v2fly
 from scripts.ip_rules import IPResult, _google_prefixes, _request, normalized_network, resolve_ip_source, sorted_networks, subtract_networks
 from scripts.render_catalog import render
 from scripts.validate import validate
@@ -84,6 +84,15 @@ class GeneratorTests(unittest.TestCase):
         domains, unsupported = parse_meta('payload:\n  - +.example.com\n  - bad/path\n')
         self.assertEqual(domains, {'example.com'})
         self.assertEqual(len(unsupported), 1)
+
+    def test_microsoft_365_official_domain_patterns(self):
+        document = '[{"urls": ["*.outlook.com", "teams.microsoft.com", "autodiscover.*.onmicrosoft.com", "*cdn.onenote.net"]}]'
+        domains, unsupported = parse_microsoft_365_domains(document)
+        self.assertEqual(domains, {'outlook.com', 'teams.microsoft.com'})
+        self.assertEqual({item['rule'] for item in unsupported},
+                         {'autodiscover.*.onmicrosoft.com', '*cdn.onenote.net'})
+        with self.assertRaisesRegex(ValueError, 'invalid Microsoft 365'):
+            parse_microsoft_365_domains('{}')
 
     def test_google_aggregation_and_provider_independence(self):
         config = {'providers': {

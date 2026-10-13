@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-13
+
+### Added
+
+- Added V2Fly's maintained OpenAI domain rules as a second community source,
+  expanding the OpenAI domain subscription from 31 to 40 entries at release
+  validation time.
+- Added URL patterns from Microsoft's official, regularly updated Microsoft
+  365 Worldwide endpoint feed to the Microsoft domain subscription.
+- Added a source audit covering all configured providers and the supplied
+  OpenAI observations, with explicit destination-versus-egress IP distinctions.
+
+### Changed
+
+- Documented that OpenAI's published crawler and integration IP feeds are
+  outbound source addresses, not client VPN destinations; OpenAI IP-only and
+  combined lists remain unavailable without an attributable destination feed.
+- Clarified that provider subscriptions reflect the documented scope of their
+  sources and cannot guarantee every dynamic third-party dependency.
+
 ## [1.0.0] - 2026-10-13
 
 ### Added
