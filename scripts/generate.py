@@ -22,7 +22,7 @@ else:
 
 ROOT = Path(__file__).resolve().parents[1]
 HOST = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$", re.I)
-USER_AGENT = "glinet-vpn-subscription-generator/1.2 (public GitHub Actions generator)"
+USER_AGENT = "glinet-vpn-subscription-generator/1.0.0 (public GitHub Actions generator)"
 
 
 def normalize(value: str) -> str | None:

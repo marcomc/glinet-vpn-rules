@@ -57,7 +57,7 @@ def subtract_networks(owned: tuple[Network, ...], excluded: tuple[Network, ...])
 
 
 def _request(url: str) -> tuple[str, dict[str, str]]:
-    headers = {"User-Agent": "glinet-vpn-subscription-generator/1.2"}
+    headers = {"User-Agent": "glinet-vpn-subscription-generator/1.0.0"}
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if token and urllib.parse.urlparse(url).hostname == "api.github.com":
         headers["Authorization"] = f"Bearer {token}"
