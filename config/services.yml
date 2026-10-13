@@ -194,88 +194,88 @@ sources:
 providers:
   google:
     core:
-      output: output/google/google-core.txt
+      output: output/google/google-core-domains.txt
       sources:
       - blackmatrix7:GoogleSearch
       - curated:google-core
       limitations:
       - Shared authentication domains may also serve other Google products.
     apis:
-      output: output/google/google-apis.txt
+      output: output/google/google-apis-domains.txt
       sources:
       - v2fly:firebase
       - curated:google-apis
       limitations:
       - googleapis.com is shared across services.
     gmail:
-      output: output/google/google-gmail.txt
+      output: output/google/google-gmail-domains.txt
       sources:
       - curated:google-gmail
       limitations:
       - Authentication and static assets may require google-core and google-apis.
     youtube:
-      output: output/google/google-youtube.txt
+      output: output/google/google-youtube-domains.txt
       sources:
       - v2fly:youtube
       - blackmatrix7:YouTubeMusic
       limitations:
       - YouTube may also use shared Google authentication and static assets.
     drive:
-      output: output/google/google-drive.txt
+      output: output/google/google-drive-domains.txt
       sources:
       - blackmatrix7:GoogleDrive
       limitations:
       - Google Drive rules include shared googleusercontent.com.
     docs:
-      output: output/google/google-docs.txt
+      output: output/google/google-docs-domains.txt
       sources:
       - curated:google-docs
       limitations:
       - Docs, Sheets and Slides may use Drive and shared Google APIs.
     maps:
-      output: output/google/google-maps.txt
+      output: output/google/google-maps-domains.txt
       sources:
       - curated:google-maps
       limitations:
       - Maps uses shared Google infrastructure.
     photos:
-      output: output/google/google-photos.txt
+      output: output/google/google-photos-domains.txt
       sources:
       - curated:google-photos
       limitations:
       - Photos may use shared googleusercontent.com.
     meet:
-      output: output/google/google-meet.txt
+      output: output/google/google-meet-domains.txt
       sources:
       - curated:google-meet
       limitations:
       - Media transport can use shared endpoints.
     cloud:
-      output: output/google/google-cloud.txt
+      output: output/google/google-cloud-domains.txt
       sources:
       - curated:google-cloud
       limitations:
       - Google Cloud customer IP ranges are excluded.
     ads:
-      output: output/google/google-ads.txt
+      output: output/google/google-ads-domains.txt
       sources:
       - v2fly:dart
       - curated:google-ads
       limitations:
       - Ad infrastructure can overlap with other services.
     play:
-      output: output/google/google-play.txt
+      output: output/google/google-play-domains.txt
       sources:
       - v2fly:google-play
     gemini:
-      output: output/google/google-gemini.txt
+      output: output/google/google-gemini-domains.txt
       sources:
       - v2fly:google-gemini
       - v2fly:google-deepmind
       limitations:
       - Gemini may use shared authentication and API endpoints.
     other:
-      output: output/google/google-other.txt
+      output: output/google/google-other-domains.txt
       sources:
       - v2fly:google
       - blackmatrix7:Google
@@ -284,30 +284,30 @@ providers:
       - Remainder of broad upstream Google definitions after explicit service assignments.
       remaining: true
     all:
-      output: output/google/google-all.txt
+      output: output/google/google-all-domains.txt
       sources: []
       limitations:
       - Union of all Google service lists; shared domains can appear in several lists.
   apple:
     all:
-      output: output/apple/apple-all.txt
+      output: output/apple/apple-all-domains.txt
       sources:
       - v2fly:apple
       - blackmatrix7:Apple
   microsoft:
     all:
-      output: output/microsoft/microsoft-all.txt
+      output: output/microsoft/microsoft-all-domains.txt
       sources:
       - v2fly:microsoft
       - blackmatrix7:Microsoft
   openai:
     all:
-      output: output/openai/openai-all.txt
+      output: output/openai/openai-all-domains.txt
       sources:
       - blackmatrix7:OpenAI
   meta:
     all:
-      output: output/meta/meta-all.txt
+      output: output/meta/meta-all-domains.txt
       sources:
       - v2fly:meta
       - v2fly:facebook
@@ -316,47 +316,47 @@ providers:
       - blackmatrix7:Instagram
   amazon:
     all:
-      output: output/amazon/amazon-all.txt
+      output: output/amazon/amazon-all-domains.txt
       sources:
       - v2fly:amazon
       - v2fly:aws
       - blackmatrix7:Amazon
   netflix:
     all:
-      output: output/netflix/netflix-all.txt
+      output: output/netflix/netflix-all-domains.txt
       sources:
       - v2fly:netflix
       - blackmatrix7:Netflix
   spotify:
     all:
-      output: output/spotify/spotify-all.txt
+      output: output/spotify/spotify-all-domains.txt
       sources:
       - blackmatrix7:Spotify
   cloudflare:
     all:
-      output: output/cloudflare/cloudflare-all.txt
+      output: output/cloudflare/cloudflare-all-domains.txt
       sources:
       - v2fly:cloudflare
       - blackmatrix7:Cloudflare
   anthropic:
     all:
-      output: output/anthropic/anthropic-all.txt
+      output: output/anthropic/anthropic-all-domains.txt
       sources:
       - v2fly:anthropic
       - blackmatrix7:Anthropic
   x:
     all:
-      output: output/x/x-all.txt
+      output: output/x/x-all-domains.txt
       sources:
       - blackmatrix7:Twitter
   telegram:
     all:
-      output: output/telegram/telegram-all.txt
+      output: output/telegram/telegram-all-domains.txt
       sources:
       - blackmatrix7:Telegram
   tiktok:
     all:
-      output: output/tiktok/tiktok-all.txt
+      output: output/tiktok/tiktok-all-domains.txt
       sources:
       - blackmatrix7:TikTok
 ip_sources:

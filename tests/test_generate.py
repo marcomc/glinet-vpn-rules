@@ -8,7 +8,8 @@ import scripts.generate as module
 import yaml
 
 from scripts.generate import Resolver, generate, normalize, parse_clash, parse_meta, parse_v2fly
-from scripts.ip_rules import _google_prefixes, _request, normalized_network, resolve_ip_source, sorted_networks, subtract_networks
+from scripts.ip_rules import IPResult, _google_prefixes, _request, normalized_network, resolve_ip_source, sorted_networks, subtract_networks
+from scripts.render_catalog import render
 from scripts.validate import validate
 
 
@@ -87,11 +88,11 @@ class GeneratorTests(unittest.TestCase):
     def test_google_aggregation_and_provider_independence(self):
         config = {'providers': {
             'google': {
-                'core': {'output': 'output/google/google-core.txt', 'sources': ['core']},
-                'other': {'output': 'output/google/google-other.txt', 'sources': ['broad'], 'remaining': True},
-                'all': {'output': 'output/google/google-all.txt', 'sources': []},
+                'core': {'output': 'output/google/google-core-domains.txt', 'sources': ['core']},
+                'other': {'output': 'output/google/google-other-domains.txt', 'sources': ['broad'], 'remaining': True},
+                'all': {'output': 'output/google/google-all-domains.txt', 'sources': []},
             },
-            'apple': {'all': {'output': 'output/apple/apple-all.txt', 'sources': ['apple']}},
+            'apple': {'all': {'output': 'output/apple/apple-all-domains.txt', 'sources': ['apple']}},
         }}
         resolver = Resolver({'core': {'domains': ['google.com']},
                              'broad': {'domains': ['google.com', 'youtube.com']},
@@ -104,14 +105,14 @@ class GeneratorTests(unittest.TestCase):
     def test_fetch_failure_preserves_previous_output(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            previous = root / 'output/apple/apple-all.txt'
+            previous = root / 'output/apple/apple-all-domains.txt'
             previous.parent.mkdir(parents=True)
             previous.write_text('apple.com\n')
             config = root / 'services.yml'
             config.write_text(yaml.safe_dump({
                 'sources': {'remote': {'format': 'v2fly', 'url': 'https://example.com/rules'}},
                 'providers': {'apple': {'all': {
-                    'output': 'output/apple/apple-all.txt', 'sources': ['remote']}}},
+                    'output': 'output/apple/apple-all-domains.txt', 'sources': ['remote']}}},
             }))
             with patch('sys.argv', ['generate', '--config', str(config), '--output-root', str(root)]), patch.object(module, 'fetch', side_effect=OSError('offline')):
                 with self.assertRaisesRegex(OSError, 'offline'):
@@ -126,21 +127,57 @@ class GeneratorTests(unittest.TestCase):
             config.write_text(yaml.safe_dump({
                 'sources': {'curated': {'domains': ['example.com']}},
                 'providers': {'google': {
-                    'core': {'output': 'output/google/google-core.txt', 'sources': ['curated']},
-                    'all': {'output': 'output/google/google-all.txt', 'sources': []},
+                    'core': {'output': 'output/google/google-core-domains.txt', 'sources': ['curated']},
+                    'all': {'output': 'output/google/google-all-domains.txt', 'sources': []},
                 }},
             }))
             with patch('sys.argv', ['generate', '--config', str(config), '--output-root', str(output_root)]):
                 module.main()
             validate(output_root)
             self.assertEqual(
-                (output_root / 'output/google/google-all.txt').read_text(),
+                (output_root / 'output/google/google-all-domains.txt').read_text(),
                 'example.com\n',
             )
             self.assertFalse((root / 'output').exists())
 
+    def test_canonical_names_replace_old_aliases(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / 'output/google'
+            output.mkdir(parents=True)
+            for name in ('google-all.txt', 'google-all-all-v4.txt'):
+                (output / name).write_text('obsolete\n')
+            config = root / 'services.yml'
+            config.write_text(yaml.safe_dump({
+                'sources': {'curated': {'domains': ['example.com']}},
+                'providers': {'google': {
+                    'core': {'output': 'output/google/google-core-domains.txt', 'sources': ['curated']},
+                    'all': {'output': 'output/google/google-all-domains.txt', 'sources': []},
+                }},
+                'ip_sources': {'owned': {}},
+                'ip_lists': {'google-all': 'owned'},
+            }))
+            source = 'https://example.com/owned'
+            result = IPResult((normalized_network('8.8.8.0/24'),
+                               normalized_network('2001:4860::/32')),
+                              (source,), {source: '2026-10-12T00:00:00Z'},
+                              '2026-10-12T01:00:00Z')
+            with patch('sys.argv', ['generate', '--config', str(config), '--output-root', str(root)]), \
+                 patch.object(module, 'resolve_ip_source', return_value=result):
+                module.main()
+            validate(root)
+            self.assertEqual({path.name for path in output.glob('*.txt')}, {
+                'google-core-domains.txt', 'google-all-domains.txt',
+                'google-all-ips-v4.txt', 'google-all-ips-v6.txt',
+                'google-all-ips.txt', 'google-all-combined-v4.txt',
+                'google-all-combined-v6.txt', 'google-all-combined.txt',
+            })
+            self.assertIn('google-all-combined-v4.txt', render(root))
+            self.assertEqual((output / 'google-all-combined-v4.txt').read_text(),
+                             'example.com\n8.8.8.0/24\n')
+
     def test_empty_list_rejected(self):
-        config = {'providers': {'apple': {'all': {'output': 'output/apple/apple-all.txt', 'sources': ['empty']}}}}
+        config = {'providers': {'apple': {'all': {'output': 'output/apple/apple-all-domains.txt', 'sources': ['empty']}}}}
         with self.assertRaisesRegex(ValueError, 'empty output'):
             generate(config, Resolver({'empty': {'domains': []}}))
 

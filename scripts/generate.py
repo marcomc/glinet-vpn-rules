@@ -200,7 +200,7 @@ def generate(config: dict, resolver: Resolver) -> tuple[dict[str, set[str]], dic
     for provider, services in config["providers"].items():
         for service, spec in services.items():
             name = f"{provider}-{service}"
-            expected = f"output/{provider}/{name}.txt"
+            expected = f"output/{provider}/{name}-domains.txt"
             if spec["output"] != expected or name not in outputs:
                 raise ValueError(f"invalid output mapping: {name}")
     return outputs, details
@@ -230,8 +230,7 @@ def main() -> None:
             if normalize(domain) != domain:
                 raise ValueError(f"router-incompatible domain in {name}: {domain}")
         domain_content = "\n".join(domain_lines) + "\n"
-        planned[output_root / spec["output"]] = domain_content  # Preserve 1.0 subscription URLs.
-        domains_path = output_root / "output" / provider / f"{name}-domains.txt"
+        domains_path = output_root / spec["output"]
         planned[domains_path] = domain_content
         report["artifacts"][str(domains_path.relative_to(output_root))] = {"domains": len(domains), "ipv4_cidrs": 0, "ipv6_cidrs": 0}
         report["lists"][name] = {"provider": provider, "service": service, "domains": len(domains),
@@ -257,9 +256,9 @@ def main() -> None:
             f"{name}-ips-v4.txt": ([], ipv4_lines),
             f"{name}-ips-v6.txt": ([], ipv6_lines),
             f"{name}-ips.txt": ([], ip_lines),
-            f"{name}-all-v4.txt": (service_domain_lines, ipv4_lines),
-            f"{name}-all-v6.txt": (service_domain_lines, ipv6_lines),
-            f"{name}-all.txt": (service_domain_lines, ip_lines),
+            f"{name}-combined-v4.txt": (service_domain_lines, ipv4_lines),
+            f"{name}-combined-v6.txt": (service_domain_lines, ipv6_lines),
+            f"{name}-combined.txt": (service_domain_lines, ip_lines),
         }
         for filename, (variant_domains, variant_ips) in variants.items():
             if not variant_ips:
@@ -286,6 +285,11 @@ def main() -> None:
             handle.write(content)
             temporary = Path(handle.name)
         temporary.replace(destination)
+    expected_output = {destination for destination in planned
+                       if destination.is_relative_to(output_root / "output")}
+    for obsolete in (output_root / "output").rglob("*.txt"):
+        if obsolete not in expected_output:
+            obsolete.unlink()
     print(json.dumps({"lists": len(outputs), "domains": {key: len(value) for key, value in outputs.items()}}, sort_keys=True))
 
 

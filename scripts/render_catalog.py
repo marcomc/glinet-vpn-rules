@@ -3,16 +3,17 @@
 
 from __future__ import annotations
 
-import json
 import argparse
+import json
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[1]
 START = "<!-- BEGIN GENERATED CATALOG -->"
 END = "<!-- END GENERATED CATALOG -->"
 RAW_ROOT = "https://raw.githubusercontent.com/marcomc/glinet-vpn-subscription-lists/main"
 VARIANT_SUFFIXES = (
-    "-all-v4", "-all-v6", "-ips-v4", "-ips-v6", "-domains", "-ips", "-all"
+    "-combined-v4", "-combined-v6", "-ips-v4", "-ips-v6", "-domains", "-ips", "-combined"
 )
 
 
@@ -20,27 +21,21 @@ def render(root: Path) -> str:
     report = json.loads((root / "reports/coverage.json").read_text(encoding="utf-8"))
     lists = report["lists"]
     artifacts = report["artifacts"]
-    legacy = {f"output/{details['provider']}/{name}.txt": name
-              for name, details in lists.items()}
-    expected = set(legacy) | set(artifacts)
+    expected = set(artifacts)
     actual = {str(path.relative_to(root)) for path in (root / "output").rglob("*.txt")}
     if actual != expected:
         raise ValueError(f"catalog does not match output files: {sorted(actual ^ expected)}")
 
     rows = []
     for relative in sorted(expected):
-        if relative in legacy:
-            base = legacy[relative]
-            counts = (lists[base]["domains"], 0, 0)
-        else:
-            stem = Path(relative).stem
-            base = next((stem[:-len(suffix)] for suffix in VARIANT_SUFFIXES
-                         if stem.endswith(suffix)), None)
-            if base not in lists:
-                raise ValueError(f"unknown service for {relative}")
-            details = artifacts[relative]
-            counts = tuple(details[key] for key in
-                           ("domains", "ipv4_cidrs", "ipv6_cidrs"))
+        stem = Path(relative).stem
+        base = next((stem[:-len(suffix)] for suffix in VARIANT_SUFFIXES
+                     if stem.endswith(suffix)), None)
+        if base not in lists:
+            raise ValueError(f"unknown service for {relative}")
+        details = artifacts[relative]
+        counts = tuple(details[key] for key in
+                       ("domains", "ipv4_cidrs", "ipv6_cidrs"))
         if len((root / relative).read_text(encoding="utf-8").splitlines()) != sum(counts):
             raise ValueError(f"count mismatch for {relative}")
         service = lists[base]
@@ -64,14 +59,14 @@ def main() -> None:
                         help="lists repository root containing README.md and output/")
     args = parser.parse_args()
     root = args.root.resolve()
-    readme = root / "README.md"
-    original = readme.read_text(encoding="utf-8")
-    if original.count(START) != 1 or original.count(END) != 1:
-        raise ValueError("README.md must contain one catalog marker pair")
-    before, remainder = original.split(START, 1)
+    template = (ROOT / "templates/lists-README.md").read_text(encoding="utf-8")
+    if template.count(START) != 1 or template.count(END) != 1:
+        raise ValueError("README template must contain one catalog marker pair")
+    before, remainder = template.split(START, 1)
     _, after = remainder.split(END, 1)
     updated = f"{before}{START}\n\n{render(root)}\n\n{END}{after}"
-    if updated != original:
+    readme = root / "README.md"
+    if not readme.exists() or updated != readme.read_text(encoding="utf-8"):
         readme.write_text(updated, encoding="utf-8")
 
 

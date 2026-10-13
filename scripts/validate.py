@@ -20,8 +20,6 @@ def validate(root: Path = ROOT) -> None:
     artifacts = report["artifacts"]
     paths = sorted((root / "output").rglob("*.txt"))
     expected = set(artifacts)
-    for name, details in report["lists"].items():
-        expected.add(f"output/{details['provider']}/{name}.txt")
     actual = {str(path.relative_to(root)) for path in paths}
     if actual != expected:
         raise ValueError(f"unexpected or missing subscriptions: {sorted(actual ^ expected)}")
@@ -60,10 +58,10 @@ def validate(root: Path = ROOT) -> None:
             for cidr, item in provenance.items():
                 if not item.get("source_urls") or not item.get("source_updated_at") or not item.get("retrieved_at"):
                     raise ValueError(f"incomplete IP provenance: {cidr}")
-    google = set((root / "output/google/google-all.txt").read_text().splitlines())
+    google = set((root / "output/google/google-all-domains.txt").read_text().splitlines())
     services = set().union(*(set(path.read_text().splitlines()) for path in
                              (root / "output/google").glob("google-*.txt")
-                             if path.name in {f"{name}.txt" for name in report["lists"] if name.startswith("google-") and name != "google-all"}))
+                             if path.name in {f"{name}-domains.txt" for name in report["lists"] if name.startswith("google-") and name != "google-all"}))
     if google != services:
         raise ValueError("google-all is not the union of Google service domains")
     for base, provenance in report["ip_ranges"].items():
@@ -78,9 +76,9 @@ def validate(root: Path = ROOT) -> None:
             f"{base}-ips-v4.txt": ipv4,
             f"{base}-ips-v6.txt": ipv6,
             f"{base}-ips.txt": source_ranges,
-            f"{base}-all-v4.txt": domains | ipv4,
-            f"{base}-all-v6.txt": domains | ipv6,
-            f"{base}-all.txt": domains | source_ranges,
+            f"{base}-combined-v4.txt": domains | ipv4,
+            f"{base}-combined-v6.txt": domains | ipv6,
+            f"{base}-combined.txt": domains | source_ranges,
         }
         for filename, expected_lines in expected_lists.items():
             actual_lines = set((directory / filename).read_text().splitlines())

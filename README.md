@@ -32,7 +32,7 @@ python scripts/validate.py --root ../glinet-vpn-subscription-lists
 python scripts/render_catalog.py --root ../glinet-vpn-subscription-lists
 ```
 
-The output root is required so generated files are not written into the generator repository by mistake. Generation downloads configured upstream sources and writes the lists and `reports/coverage.json` only after all sources have been fetched and parsed.
+The output root is required so generated files are not written into the generator repository by mistake. Generation downloads configured upstream sources and writes the lists and `reports/coverage.json` only after all sources have been fetched and parsed. It removes obsolete generated list files, including the former plain-name and `-all` format aliases. The published README is rendered from [`templates/lists-README.md`](templates/lists-README.md).
 
 ## Development
 

@@ -16,6 +16,9 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   access only to the lists repository.
 - Rebuilt both repositories from independent root commits and retired tags and
   releases that referenced the former combined history.
+- Replaced combined-list `-all` format suffixes with `-combined` and removed
+  plain-name domain aliases. Published metadata now comes from the generator
+  template, and obsolete list files are removed during publication.
 
 ## [1.2.0] - 2026-10-12
 
