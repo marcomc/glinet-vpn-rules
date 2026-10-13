@@ -88,6 +88,12 @@ def _google_prefixes(document: dict) -> tuple[Network, ...]:
     return sorted_networks(networks)
 
 
+def _openai_voice_prefixes(document: dict) -> tuple[Network, ...]:
+    if not isinstance(document, dict) or not document.get("creationTime"):
+        raise ValueError("invalid OpenAI Voice prefix document")
+    return _google_prefixes(document)
+
+
 def _http_updated(headers: dict[str, str], retrieved_at: str) -> str:
     last_modified = headers.get("Last-Modified") or headers.get("last-modified")
     if last_modified:
@@ -117,6 +123,11 @@ def resolve_ip_source(spec: dict, retrieved_at: str) -> IPResult:
             raise ValueError("invalid Microsoft 365 feed version")
         sources = (spec["url"], spec["version_url"])
         stamps = {spec["url"]: f"{stamp[:4]}-{stamp[4:6]}-{stamp[6:8]} (version {stamp})", spec["version_url"]: stamp}
+    elif kind == "openai-voice":
+        document, _ = _json(spec["url"])
+        networks = _openai_voice_prefixes(document)
+        sources = (spec["url"],)
+        stamps = {spec["url"]: document["creationTime"]}
     elif kind in {"cidr-lines", "community-cidr"}:
         body, headers = _request(spec["url"])
         values = [line.strip() for line in body.splitlines() if line.strip() and not line.lstrip().startswith("#")]

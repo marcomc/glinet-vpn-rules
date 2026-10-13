@@ -81,9 +81,18 @@ def validate(root: Path = ROOT) -> None:
             f"{base}-combined.txt": domains | source_ranges,
         }
         for filename, expected_lines in expected_lists.items():
-            actual_lines = set((directory / filename).read_text().splitlines())
+            artifact = directory / filename
+            # The generator omits an address-family variant when its source
+            # publishes no ranges for that family.
+            if filename.endswith(('-ips-v4.txt', '-ips-v6.txt', '-combined-v4.txt', '-combined-v6.txt')) and not (
+                ipv4 if filename.endswith('-v4.txt') else ipv6
+            ):
+                if artifact.exists():
+                    raise ValueError(f"unexpected empty address-family list: {artifact}")
+                continue
+            actual_lines = set(artifact.read_text().splitlines())
             if actual_lines != expected_lines:
-                raise ValueError(f"combined-list mismatch: {directory / filename}")
+                raise ValueError(f"combined-list mismatch: {artifact}")
 
 
 if __name__ == "__main__":

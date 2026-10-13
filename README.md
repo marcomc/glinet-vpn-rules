@@ -58,12 +58,13 @@ Source licensing and attribution for generated data are documented in [the lists
 ## Source coverage
 
 The [source audit](docs/source-audit-1.1.0.md) records the usable official and
-community sources for each configured provider. OpenAI domains combine two
-community feeds, but OpenAI's published crawler and integration IP files list
-addresses that contact other systems, not destinations for a ChatGPT client.
-Microsoft's official 365 feed supplements its domain rules and is scoped to
-Microsoft 365, not every Microsoft product. These lists cannot promise complete
-coverage of changing provider infrastructure or third-party dependencies.
+community sources for each configured provider. OpenAI domains include its
+official network guide and two community feeds. OpenAI IP variants contain
+only its published ChatGPT Voice server ranges for UDP 3478; its crawler and
+integration IP files describe outbound requests to other systems. Microsoft's
+official 365 feed supplements its domain rules and is scoped to Microsoft 365.
+These lists cannot promise complete coverage of changing provider
+infrastructure or third-party dependencies.
 
 ## Publication
 

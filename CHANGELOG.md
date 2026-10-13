@@ -10,18 +10,21 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ### Added
 
 - Added V2Fly's maintained OpenAI domain rules as a second community source,
-  expanding the OpenAI domain subscription from 31 to 40 entries at release
-  validation time.
+  plus hostnames from OpenAI's official network guide, expanding the OpenAI
+  domain subscription from 31 entries at the previous release.
+- Added OpenAI's official ChatGPT Voice server IP feed, with IPv4 subscription
+  variants and per-range source timestamp. These ranges cover Voice on UDP
+  port 3478, not general ChatGPT or API destinations.
 - Added URL patterns from Microsoft's official, regularly updated Microsoft
   365 Worldwide endpoint feed to the Microsoft domain subscription.
 - Added a source audit covering all configured providers and the supplied
-  OpenAI observations, with explicit destination-versus-egress IP distinctions.
+  OpenAI observations, distinguishing destination IPs from egress IPs.
+- Included domain source URLs in the generated coverage report.
 
 ### Changed
 
-- Documented that OpenAI's published crawler and integration IP feeds are
-  outbound source addresses, not client VPN destinations; OpenAI IP-only and
-  combined lists remain unavailable without an attributable destination feed.
+- Documented that OpenAI's crawler and integration IP feeds describe outbound
+  source addresses and remain excluded from client VPN destination lists.
 - Clarified that provider subscriptions reflect the documented scope of their
   sources and cannot guarantee every dynamic third-party dependency.
 

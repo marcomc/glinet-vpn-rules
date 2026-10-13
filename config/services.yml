@@ -123,6 +123,42 @@ sources:
     format: v2fly
     url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/openai
     priority: 1
+  official:openai-network-domains:
+    # Curated from the official allowlist because the help page blocks automated retrieval.
+    priority: 0
+    reference: https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps
+    domains:
+    - auth.openai.com
+    - chatgpt.com
+    - ct.sendgrid.net
+    - intercom.io
+    - intercomcdn.com
+    - oaistatic.com
+    - oaiusercontent.com
+    - openai.com
+    - oaistatsig.com
+    - android.chat.openai.com
+    - auth0.openai.com
+    - cdn.openaimerge.com
+    - cdn.workos.com
+    - challenges.cloudflare.com
+    - chat.openai.com
+    - desktop.chat.openai.com
+    - forwarder.workos.com
+    - frontend-apps-multi-region.workos.com
+    - humb.apple.com
+    - images.workoscdn.com
+    - ios.chat.openai.com
+    - js.intercomcdn.com
+    - js.stripe.com
+    - o207216.ingest.sentry.io
+    - o33249.ingest.sentry.io
+    - rum.browser-intake-datadoghq.com
+    - setup.auth.openai.com
+    - setup.workos.com
+    - tcr9i.chat.openai.com
+    - workos.imgix.net
+    - ws.chatgpt.com
   v2fly:meta:
     format: v2fly
     url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/meta
@@ -315,10 +351,12 @@ providers:
     all:
       output: output/openai/openai-all-domains.txt
       sources:
+      - official:openai-network-domains
       - v2fly:openai
       - blackmatrix7:OpenAI
       limitations:
-      - No verified OpenAI client-destination IP allocation is published; crawler and action egress feeds are excluded.
+      - IP variants contain only official ChatGPT Voice server ranges on UDP port 3478; other ChatGPT destination IPs are not covered.
+      - Crawler and integration egress feeds are excluded from client-destination IP rules.
       - Shared third-party domains in community sources can route unrelated traffic.
   meta:
     all:
@@ -385,6 +423,11 @@ ip_sources:
     url: https://endpoints.office.com/endpoints/worldwide
     version_url: https://endpoints.office.com/version/worldwide
     license: Microsoft published data
+  openai-voice:
+    format: openai-voice
+    url: https://openai.com/chatgpt-voice.json
+    license: OpenAI published data
+    classification: ChatGPT Voice server destinations for UDP port 3478, not all OpenAI services
   telegram:
     format: cidr-lines
     url: https://core.telegram.org/resources/cidr.txt
@@ -410,6 +453,7 @@ ip_sources:
 ip_lists:
   google-all: google-services
   microsoft-all: microsoft-365
+  openai-all: openai-voice
   telegram-all: telegram
   meta-all: geoip-facebook
   netflix-all: geoip-netflix

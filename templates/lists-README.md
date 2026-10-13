@@ -56,7 +56,7 @@ Combined lists now use `-combined.txt`, `-combined-v4.txt`, and `-combined-v6.tx
 - After import, check the detected rule count and route real IPv4 and IPv6 traffic through the intended VPN tunnel. A successful import alone does not prove routing.
 - Encrypted or external DNS, direct IP connections, and IPv6 paths outside the VPN policy can bypass domain-based policies.
 - Shared cloud allocations and DNS-derived IP addresses are excluded from provider IP lists. See [source attribution](DATA-LICENSES.md) and the coverage report for provenance and update timestamps.
-- OpenAI currently has a domain list only. Its published crawler and integration CIDRs describe OpenAI-originated connections, so they are unsuitable as ChatGPT client destinations. Microsoft 365's official endpoint feed supplements Microsoft domains and IPs but does not cover every Microsoft product.
+- OpenAI IP variants include only official ChatGPT Voice server CIDRs for UDP port 3478; they do not cover ChatGPT web or API destinations. GL.iNet's IP subscription rules are address based and can also route other traffic to those servers. OpenAI crawler and integration CIDRs describe OpenAI-originated connections and are excluded. Microsoft's official 365 endpoint feed does not cover every Microsoft product.
 - Provider and community feeds can omit changing regional endpoints or third-party dependencies; use the coverage report to inspect each list's source scope.
 
 ## Updates and attribution

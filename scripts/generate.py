@@ -268,6 +268,8 @@ def main() -> None:
         report["artifacts"][str(domains_path.relative_to(output_root))] = {"domains": len(domains), "ipv4_cidrs": 0, "ipv6_cidrs": 0}
         report["lists"][name] = {"provider": provider, "service": service, "domains": len(domains),
                                   "sources": source_keys, "last_successful_update": timestamp,
+                                  "source_urls": {key: resolver.sources[key].get("reference") or resolver.sources[key].get("url")
+                                                  for key in source_keys if resolver.sources[key].get("reference") or resolver.sources[key].get("url")},
                                   "unsupported_rules": sum(len(resolver.unsupported.get(key, [])) for key in source_keys),
                                   "coverage_limitations": spec.get("limitations", [])}
     for name, source_key in config.get("ip_lists", {}).items():

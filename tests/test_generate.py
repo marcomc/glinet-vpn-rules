@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -49,6 +50,20 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn(source['url'], result.source_updated_at)
         self.assertEqual(result.retrieved_at, '2026-10-12T01:00:00Z')
         self.assertTrue(all(not item.overlaps(normalized_network('8.8.8.0/24')) for item in result.networks))
+
+    def test_openai_voice_destination_source(self):
+        source = {'format': 'openai-voice', 'url': 'https://openai.com/chatgpt-voice.json'}
+        document = {'creationTime': '2026-03-26T20:12:45Z', 'prefixes': [
+            {'ipv4Prefix': '13.71.25.29/32'},
+            {'ipv6Prefix': '2600:1f18:24e6:b900:1933:3aac:154f:f044/128'},
+        ]}
+        with patch('scripts.ip_rules._json', return_value=(document, {})):
+            result = resolve_ip_source(source, '2026-10-13T15:00:00Z')
+        self.assertEqual(result.source_updated_at[source['url']], document['creationTime'])
+        self.assertEqual(len(result.networks), 2)
+        with patch('scripts.ip_rules._json', return_value=({'prefixes': document['prefixes']}, {})):
+            with self.assertRaisesRegex(ValueError, 'OpenAI Voice'):
+                resolve_ip_source(source, '2026-10-13T15:00:00Z')
 
     def test_github_api_requests_use_token_only_for_github_api(self):
         with patch.dict('os.environ', {'GH_TOKEN': 'test-token'}), patch('scripts.ip_rules.urllib.request.urlopen') as urlopen:
@@ -134,7 +149,7 @@ class GeneratorTests(unittest.TestCase):
             output_root = root / 'published-lists'
             config = root / 'services.yml'
             config.write_text(yaml.safe_dump({
-                'sources': {'curated': {'domains': ['example.com']}},
+                'sources': {'curated': {'domains': ['example.com'], 'reference': 'https://example.com/official'}},
                 'providers': {'google': {
                     'core': {'output': 'output/google/google-core-domains.txt', 'sources': ['curated']},
                     'all': {'output': 'output/google/google-all-domains.txt', 'sources': []},
@@ -148,6 +163,10 @@ class GeneratorTests(unittest.TestCase):
                 'example.com\n',
             )
             self.assertFalse((root / 'output').exists())
+            self.assertEqual(
+                json.loads((output_root / 'reports/coverage.json').read_text())['lists']['google-core']['source_urls'],
+                {'curated': 'https://example.com/official'},
+            )
 
     def test_canonical_names_replace_old_aliases(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -184,6 +203,33 @@ class GeneratorTests(unittest.TestCase):
             self.assertIn('google-all-combined-v4.txt', render(root))
             self.assertEqual((output / 'google-all-combined-v4.txt').read_text(),
                              'example.com\n8.8.8.0/24\n')
+
+    def test_single_address_family_omits_empty_variants(self):
+        for cidr, present, absent in (
+            ('8.8.8.0/24', '-v4.txt', '-v6.txt'),
+            ('2001:4860::/32', '-v6.txt', '-v4.txt'),
+        ):
+            with self.subTest(cidr=cidr), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                config = root / 'services.yml'
+                config.write_text(yaml.safe_dump({
+                    'sources': {'curated': {'domains': ['example.com']}},
+                    'providers': {'google': {
+                        'core': {'output': 'output/google/google-core-domains.txt', 'sources': ['curated']},
+                        'all': {'output': 'output/google/google-all-domains.txt', 'sources': []},
+                    }},
+                    'ip_sources': {'owned': {}},
+                    'ip_lists': {'google-all': 'owned'},
+                }))
+                source = 'https://example.com/owned'
+                result = IPResult((normalized_network(cidr),), (source,),
+                                  {source: '2026-10-13T00:00:00Z'}, '2026-10-13T01:00:00Z')
+                with patch('sys.argv', ['generate', '--config', str(config), '--output-root', str(root)]), \
+                     patch.object(module, 'resolve_ip_source', return_value=result):
+                    module.main()
+                validate(root)
+                self.assertTrue((root / 'output/google' / f'google-all-ips{present}').exists())
+                self.assertFalse((root / 'output/google' / f'google-all-ips{absent}').exists())
 
     def test_empty_list_rejected(self):
         config = {'providers': {'apple': {'all': {'output': 'output/apple/apple-all-domains.txt', 'sources': ['empty']}}}}

@@ -24,13 +24,14 @@ cloud/CDN operator's whole network as belonging to a hosted application.
 
 | Source or observation | What it establishes | Safe use |
 | --- | --- | --- |
-| [OpenAI network recommendations](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps) | Official network troubleshooting reference for ChatGPT web and apps; this page returned HTTP 403 to the research fetcher, so its current host list could not be independently extracted here. | Review the current page manually and use only its documented client destination hostnames. It is not an IP range feed. |
+| [OpenAI network recommendations](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps) | Official network troubleshooting reference for ChatGPT web and apps. Its domain allowlist was read through a text rendering because the site returned HTTP 403 to direct automated requests. It explicitly says ChatGPT Voice connects to OpenAI servers over UDP 3478 and links a destination IP feed. | Curate the documented client hostnames and use the linked Voice CIDRs only for Voice destination routing. The document does not provide a general ChatGPT/API destination IP feed. |
 | [v2fly OpenAI domain data](https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/openai) | Maintained community domain rules; it includes first-party names and service/CDN dependencies, with community curation rather than an OpenAI completeness guarantee. | Add as a second domain source, then audit dependency domains and preserve its attribution. It improves coverage but cannot establish completeness. |
 | [Blackmatrix7 OpenAI rules](https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list) | Community rules currently include domains, two `/32` CIDRs, and ASN 20473. The existing generator parses only domain rules, so it drops the IP and ASN records. | Keep domain rules subject to review. Exclude the two IPs and ASN from service CIDRs: the file does not establish that these shared-hosting addresses are dedicated OpenAI destinations. |
-| [OpenAI `chatgpt-user.json`](https://openai.com/chatgpt-user.json), [`chatgpt-actions.json`](https://openai.com/chatgpt-actions.json), [`chatgpt-connectors.json`](https://openai.com/chatgpt-connectors.json), [`chatgpt-voice.json`](https://openai.com/chatgpt-voice.json), [`gptbot.json`](https://openai.com/gptbot.json), and [`searchbot.json`](https://openai.com/searchbot.json) | Official, timestamped prefix documents for named ChatGPT actors, integrations, or crawlers. They describe OpenAI-originated traffic toward other systems. The crawler files explicitly identify crawler actors. | **Do not publish these as client-to-OpenAI VPN destination CIDRs.** They are the wrong traffic direction and could reroute or capture unrelated traffic. They are useful to operators firewalling their own inbound services against the named OpenAI caller. |
+| [OpenAI `chatgpt-voice.json`](https://openai.com/chatgpt-voice.json) | The official network guide identifies these as ChatGPT Voice **server destination** IPs on UDP 3478. The live feed has 23 IPv4 `/32` entries with `creationTime` 2026-03-26. | Publish as a scoped OpenAI Voice IP source. Do not claim it covers web, API, or every ChatGPT feature; the GL.iNet IP list cannot restrict rules to UDP 3478. |
+| [OpenAI `chatgpt-user.json`](https://openai.com/chatgpt-user.json), [`chatgpt-actions.json`](https://openai.com/chatgpt-actions.json), [`chatgpt-connectors.json`](https://openai.com/chatgpt-connectors.json), [`gptbot.json`](https://openai.com/gptbot.json), and [`searchbot.json`](https://openai.com/searchbot.json) | Official, timestamped prefixes for ChatGPT actors, integrations, or crawlers connecting outward to other systems. The [official bots guide](https://platform.openai.com/docs/bots) explicitly describes ChatGPT-User visiting external web pages and the crawlers visiting sites. | Exclude from client-to-OpenAI destination CIDRs. They are useful when firewalling inbound requests to an operator's own service. |
 | Pasted hostnames such as `ifconfig.me`, `auth0.com`, `workos.com`, `stripe.com`, `intercom.io`, `sentry.io`, and analytics/CDN names | A hostname observation does not prove it is required, exclusive to OpenAI, or safe as a whole domain suffix. `ifconfig.me` is a public diagnostic endpoint, not an OpenAI service. | Do not add these wholesale. Add an exact third-party hostname only when current OpenAI documentation establishes the dependency and the broad rule will not capture unrelated sites. Never convert the pasted resolved IPs into durable ranges. |
 
-**OpenAI result:** Adding V2Fly's current domain dataset is a defensible coverage improvement; combine it with reviewed first-party names from the official network guide. No official OpenAI feed found here publishes IP ranges that represent ChatGPT/API client destinations. The official JSON feeds in the pasted file are egress allowlist data, not destination subscriptions.
+**OpenAI result:** Combine the official domain allowlist with community domains and publish only the official Voice server CIDRs as IP destinations. The other OpenAI JSON feeds in the pasted file are egress addresses. No official feed found here covers general ChatGPT web/API client destination IPs.
 
 ## Current providers and strongest usable sources
 
@@ -39,7 +40,7 @@ cloud/CDN operator's whole network as belonging to a hosted application.
 | Google | V2Fly, Blackmatrix7, MetaCubeX, curated domains; `goog.json` with `cloud.json` subtraction for IPs. | [Google published service prefixes](https://www.gstatic.com/ipranges/goog.json) and [Google Cloud prefixes](https://www.gstatic.com/ipranges/cloud.json) are regularly timestamped. Excluding Cloud prefixes avoids broad Google Cloud customer allocations. The remainder is still shared Google service/edge infrastructure and is safe only as a broad Google-provider policy, not service attribution. | No complete official domain feed for all Google consumer products was identified. Workspace IP/domain help pages are scoped to Workspace operations and should not be represented as all Google. Do not claim the remainder of `goog.json` is exclusive to a particular Google service. |
 | Apple | V2Fly and Blackmatrix7 domains; no IP source. | [Apple enterprise network requirements](https://support.apple.com/101555) documents product network destinations and is a potential source for explicit Apple domain rules. | Product-specific requirements are not a complete Apple domain inventory. No general destination CIDR feed was identified. iCloud Private Relay egress prefixes, if considered, are relay exit addresses, not Apple destinations for a VPN client. |
 | Microsoft | V2Fly and Blackmatrix7 domains; Microsoft 365 endpoint feed for IPs. | [Microsoft 365 Worldwide endpoints API](https://endpoints.office.com/endpoints/worldwide) and its [version endpoint](https://endpoints.office.com/version/worldwide) provide dated, scoped Microsoft 365 URLs and IPs. Keep service areas/category metadata when filtering. | This covers Microsoft 365 endpoint requirements, not every Microsoft service. Do not append all Azure service-tag or Azure `ServiceTags_Public` ranges: those include broad cloud infrastructure and customer workloads. |
-| OpenAI | Blackmatrix7 domains only; community rule's CIDR/ASN entries are ignored by the current parser. | Use reviewed OpenAI client-domain documentation and V2Fly OpenAI domains as above. | No official client-destination CIDR feed identified. Official OpenAI actor JSONs are egress and must not be used as destination ranges. |
+| OpenAI | Official network-guide domains plus V2Fly and Blackmatrix7 domains; official Voice server CIDRs. | The [network guide](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps) identifies client domains and `chatgpt-voice.json` destination IPs. | Voice IPs do not cover web/API traffic. Other OpenAI actor JSONs are egress and must not be used as client destination ranges. |
 | Meta (Facebook/Instagram) | V2Fly and Blackmatrix7 domains; community `Loyalsoldier/geoip` Facebook prefixes. | [Loyalsoldier Facebook GeoIP list](https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/facebook.txt), with its [commit metadata](https://api.github.com/repos/Loyalsoldier/geoip/commits?path=text/facebook.txt&sha=release&per_page=1), is a maintained, attributed community classification. It can support a broad Meta-owned-network policy if its ASN-based scope is accepted. | No official service-specific Meta destination CIDR feed identified. GeoIP classification is neither a completeness guarantee nor a separation of Facebook, Instagram, and shared Meta infrastructure. |
 | Amazon (including AWS in current config) | V2Fly Amazon/AWS domains and Blackmatrix7 Amazon domains; no IP source. | [AWS `ip-ranges.json`](https://ip-ranges.amazonaws.com/ip-ranges.json) is official and timestamped for AWS infrastructure by service/region. | AWS ranges host unrelated customer workloads; exclude the whole feed from an Amazon/AWS destination subscription. The current single `amazon-all` combines retail Amazon with AWS; that is a scope/attribution gap and should be split before claiming “all Amazon.” No general retail Amazon destination CIDR feed identified. |
 | Netflix | V2Fly and Blackmatrix7 domains; community `Loyalsoldier/geoip` Netflix prefixes. | [Loyalsoldier Netflix GeoIP list](https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/netflix.txt) and [commit metadata](https://api.github.com/repos/Loyalsoldier/geoip/commits?path=text/netflix.txt&sha=release&per_page=1) provide maintained community attribution. | No general official client-destination CIDR feed identified. Open Connect material is about Netflix content delivery and ISP deployments; it is not a complete consumer destination feed. Community IP ranges may miss delivery through partner networks. |
@@ -53,15 +54,19 @@ cloud/CDN operator's whole network as belonging to a hosted application.
 ## Handling the supplied OpenAI IP observations
 
 The pasted file combines hostnames with different ownerships and purposes, and
-CIDRs at `/32` or `/128` granularity alongside broader blocks. The OpenAI JSON
-filenames identify several of the blocks as OpenAI-originated caller/crawler
-addresses. A destination VPN list cannot use those to represent servers that a
-ChatGPT client connects to. Treat every other pasted CIDR as unattributed unless
-it can be matched to a documented destination feed; an address observed while
-resolving a hostname is not durable ownership evidence. In particular:
+CIDRs at `/32` or `/128` granularity alongside broader blocks. Its 91 unlabelled
+IP entries are observations without a documented destination feed. The named
+JSON sections overlap OpenAI's live official feeds and appear to be older snapshots; many
+entries have since changed. A destination VPN list cannot use caller/crawler
+addresses to represent servers that a ChatGPT client connects to. Treat every
+other pasted CIDR as unattributed unless it can be matched to a documented
+destination feed; an address observed while resolving a hostname is not durable
+ownership evidence. In particular:
 
-- Exclude OpenAI crawler, SearchBot, ChatGPT user, Actions, Connectors, and
-  Voice egress prefixes from client destination rules.
+- Include the current ChatGPT Voice feed as a scoped server-destination source;
+  three pasted Voice IPs matched that live feed, which now contains 23 entries.
+- Exclude OpenAI crawler, SearchBot, ChatGPT user, Actions, and Connectors
+  egress prefixes from client destination rules.
 - Exclude Cloudflare, Azure, AWS, and other shared hosting/CDN prefixes unless
   the source explicitly labels a product-dedicated client destination range.
 - Do not include a third-party provider's entire suffix (for example,
@@ -77,11 +82,10 @@ resolving a hostname is not durable ownership evidence. In particular:
 1. Add V2Fly `data/openai` as a supplemental OpenAI **domain** source and retain
    Blackmatrix7 as a community source; record that this expands coverage but
    does not make it complete.
-2. Review the official OpenAI network-recommendations page for first-party
-   client destinations and add only specific documented hostnames that pass
-   the generator's syntax rules.
-3. Do not add OpenAI IP sources unless OpenAI publishes a feed explicitly
-   describing destination ranges for ChatGPT/API clients.
+2. Include the official OpenAI network-guide hostnames that pass the
+   generator's syntax rules, including exact third-party dependencies.
+3. Add `chatgpt-voice.json` as a narrowly scoped destination feed. Keep other
+   actor JSON feeds out of general OpenAI client VPN subscriptions.
 4. Improve other providers only with scoped official endpoint feeds or
    attributed community sources that have a clear provider-network rationale.
    Keep AWS, Cloudflare, Azure, and other multi-tenant allocations out of
