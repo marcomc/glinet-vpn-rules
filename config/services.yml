@@ -1,0 +1,401 @@
+sources:
+  blackmatrix7:GoogleSearch:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleSearch/GoogleSearch.list
+    priority: 2
+  curated:google-core:
+    domains:
+    - google.com
+    - accounts.google.com
+    priority: 0
+  v2fly:firebase:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/firebase
+    priority: 1
+  curated:google-apis:
+    domains:
+    - googleapis.com
+    - firebase.google.com
+    - firebaseapp.com
+    priority: 0
+  curated:google-gmail:
+    domains:
+    - gmail.com
+    - googlemail.com
+    - mail.google.com
+    priority: 0
+  v2fly:youtube:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/youtube
+    priority: 1
+  blackmatrix7:YouTubeMusic:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTubeMusic/YouTubeMusic.list
+    priority: 2
+  blackmatrix7:GoogleDrive:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleDrive/GoogleDrive.list
+    priority: 2
+  curated:google-docs:
+    domains:
+    - docs.google.com
+    - sheets.google.com
+    - slides.google.com
+    priority: 0
+  curated:google-maps:
+    domains:
+    - maps.google.com
+    - maps.googleapis.com
+    priority: 0
+  curated:google-photos:
+    domains:
+    - photos.google.com
+    - photos.googleapis.com
+    priority: 0
+  curated:google-meet:
+    domains:
+    - meet.google.com
+    - chat.google.com
+    priority: 0
+  curated:google-cloud:
+    domains:
+    - cloud.google.com
+    - console.cloud.google.com
+    - cloud.google
+    - gcr.io
+    priority: 0
+  v2fly:dart:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/dart
+    priority: 1
+  curated:google-ads:
+    domains:
+    - ads.google.com
+    - googleadservices.com
+    - doubleclick.net
+    - google-analytics.com
+    priority: 0
+  v2fly:google-play:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/google-play
+    priority: 1
+  v2fly:google-gemini:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/google-gemini
+    priority: 1
+  v2fly:google-deepmind:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/google-deepmind
+    priority: 1
+  v2fly:google:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/google
+    priority: 1
+  blackmatrix7:Google:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.list
+    priority: 2
+  v2fly:apple:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/apple
+    priority: 1
+  blackmatrix7:Apple:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.list
+    priority: 2
+  v2fly:microsoft:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/microsoft
+    priority: 1
+  blackmatrix7:Microsoft:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list
+    priority: 2
+  blackmatrix7:OpenAI:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list
+    priority: 2
+  v2fly:meta:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/meta
+    priority: 1
+  v2fly:facebook:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/facebook
+    priority: 1
+  v2fly:instagram:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/instagram
+    priority: 1
+  blackmatrix7:Facebook:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Facebook/Facebook.list
+    priority: 2
+  blackmatrix7:Instagram:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Instagram/Instagram.list
+    priority: 2
+  v2fly:amazon:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/amazon
+    priority: 1
+  v2fly:aws:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/aws
+    priority: 1
+  blackmatrix7:Amazon:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Amazon/Amazon.list
+    priority: 2
+  v2fly:netflix:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/netflix
+    priority: 1
+  blackmatrix7:Netflix:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.list
+    priority: 2
+  blackmatrix7:Spotify:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Spotify/Spotify.list
+    priority: 2
+  v2fly:cloudflare:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/cloudflare
+    priority: 1
+  blackmatrix7:Cloudflare:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Cloudflare/Cloudflare.list
+    priority: 2
+  v2fly:anthropic:
+    format: v2fly
+    url: https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/anthropic
+    priority: 1
+  blackmatrix7:Anthropic:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Anthropic/Anthropic.list
+    priority: 2
+  blackmatrix7:Twitter:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Twitter/Twitter.list
+    priority: 2
+  blackmatrix7:Telegram:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.list
+    priority: 2
+  blackmatrix7:TikTok:
+    format: clash
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/TikTok/TikTok.list
+    priority: 2
+  metacubex:google:
+    format: meta
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.yaml
+    priority: 3
+providers:
+  google:
+    core:
+      output: output/google/google-core.txt
+      sources:
+      - blackmatrix7:GoogleSearch
+      - curated:google-core
+      limitations:
+      - Shared authentication domains may also serve other Google products.
+    apis:
+      output: output/google/google-apis.txt
+      sources:
+      - v2fly:firebase
+      - curated:google-apis
+      limitations:
+      - googleapis.com is shared across services.
+    gmail:
+      output: output/google/google-gmail.txt
+      sources:
+      - curated:google-gmail
+      limitations:
+      - Authentication and static assets may require google-core and google-apis.
+    youtube:
+      output: output/google/google-youtube.txt
+      sources:
+      - v2fly:youtube
+      - blackmatrix7:YouTubeMusic
+      limitations:
+      - YouTube may also use shared Google authentication and static assets.
+    drive:
+      output: output/google/google-drive.txt
+      sources:
+      - blackmatrix7:GoogleDrive
+      limitations:
+      - Google Drive rules include shared googleusercontent.com.
+    docs:
+      output: output/google/google-docs.txt
+      sources:
+      - curated:google-docs
+      limitations:
+      - Docs, Sheets and Slides may use Drive and shared Google APIs.
+    maps:
+      output: output/google/google-maps.txt
+      sources:
+      - curated:google-maps
+      limitations:
+      - Maps uses shared Google infrastructure.
+    photos:
+      output: output/google/google-photos.txt
+      sources:
+      - curated:google-photos
+      limitations:
+      - Photos may use shared googleusercontent.com.
+    meet:
+      output: output/google/google-meet.txt
+      sources:
+      - curated:google-meet
+      limitations:
+      - Media transport can use shared endpoints.
+    cloud:
+      output: output/google/google-cloud.txt
+      sources:
+      - curated:google-cloud
+      limitations:
+      - Google Cloud customer IP ranges are excluded.
+    ads:
+      output: output/google/google-ads.txt
+      sources:
+      - v2fly:dart
+      - curated:google-ads
+      limitations:
+      - Ad infrastructure can overlap with other services.
+    play:
+      output: output/google/google-play.txt
+      sources:
+      - v2fly:google-play
+    gemini:
+      output: output/google/google-gemini.txt
+      sources:
+      - v2fly:google-gemini
+      - v2fly:google-deepmind
+      limitations:
+      - Gemini may use shared authentication and API endpoints.
+    other:
+      output: output/google/google-other.txt
+      sources:
+      - v2fly:google
+      - blackmatrix7:Google
+      - metacubex:google
+      limitations:
+      - Remainder of broad upstream Google definitions after explicit service assignments.
+      remaining: true
+    all:
+      output: output/google/google-all.txt
+      sources: []
+      limitations:
+      - Union of all Google service lists; shared domains can appear in several lists.
+  apple:
+    all:
+      output: output/apple/apple-all.txt
+      sources:
+      - v2fly:apple
+      - blackmatrix7:Apple
+  microsoft:
+    all:
+      output: output/microsoft/microsoft-all.txt
+      sources:
+      - v2fly:microsoft
+      - blackmatrix7:Microsoft
+  openai:
+    all:
+      output: output/openai/openai-all.txt
+      sources:
+      - blackmatrix7:OpenAI
+  meta:
+    all:
+      output: output/meta/meta-all.txt
+      sources:
+      - v2fly:meta
+      - v2fly:facebook
+      - v2fly:instagram
+      - blackmatrix7:Facebook
+      - blackmatrix7:Instagram
+  amazon:
+    all:
+      output: output/amazon/amazon-all.txt
+      sources:
+      - v2fly:amazon
+      - v2fly:aws
+      - blackmatrix7:Amazon
+  netflix:
+    all:
+      output: output/netflix/netflix-all.txt
+      sources:
+      - v2fly:netflix
+      - blackmatrix7:Netflix
+  spotify:
+    all:
+      output: output/spotify/spotify-all.txt
+      sources:
+      - blackmatrix7:Spotify
+  cloudflare:
+    all:
+      output: output/cloudflare/cloudflare-all.txt
+      sources:
+      - v2fly:cloudflare
+      - blackmatrix7:Cloudflare
+  anthropic:
+    all:
+      output: output/anthropic/anthropic-all.txt
+      sources:
+      - v2fly:anthropic
+      - blackmatrix7:Anthropic
+  x:
+    all:
+      output: output/x/x-all.txt
+      sources:
+      - blackmatrix7:Twitter
+  telegram:
+    all:
+      output: output/telegram/telegram-all.txt
+      sources:
+      - blackmatrix7:Telegram
+  tiktok:
+    all:
+      output: output/tiktok/tiktok-all.txt
+      sources:
+      - blackmatrix7:TikTok
+ip_sources:
+  google-services:
+    format: google-services
+    url: https://www.gstatic.com/ipranges/goog.json
+    exclude_url: https://www.gstatic.com/ipranges/cloud.json
+    license: Google published data
+  microsoft-365:
+    format: microsoft-365
+    url: https://endpoints.office.com/endpoints/worldwide
+    version_url: https://endpoints.office.com/version/worldwide
+    license: Microsoft published data
+  telegram:
+    format: cidr-lines
+    url: https://core.telegram.org/resources/cidr.txt
+    license: Telegram published data
+  geoip-facebook:
+    format: community-cidr
+    url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/facebook.txt
+    commit_url: https://api.github.com/repos/Loyalsoldier/geoip/commits?path=text/facebook.txt&sha=release&per_page=1
+    license: CC-BY-SA-4.0
+    classification: Dedicated provider ASN category in Loyalsoldier/geoip config.json
+  geoip-netflix:
+    format: community-cidr
+    url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/netflix.txt
+    commit_url: https://api.github.com/repos/Loyalsoldier/geoip/commits?path=text/netflix.txt&sha=release&per_page=1
+    license: CC-BY-SA-4.0
+    classification: Dedicated provider ASN category in Loyalsoldier/geoip config.json
+  geoip-twitter:
+    format: community-cidr
+    url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/twitter.txt
+    commit_url: https://api.github.com/repos/Loyalsoldier/geoip/commits?path=text/twitter.txt&sha=release&per_page=1
+    license: CC-BY-SA-4.0
+    classification: Dedicated provider ASN category in Loyalsoldier/geoip config.json
+ip_lists:
+  google-all: google-services
+  microsoft-all: microsoft-365
+  telegram-all: telegram
+  meta-all: geoip-facebook
+  netflix-all: geoip-netflix
+  x-all: geoip-twitter
