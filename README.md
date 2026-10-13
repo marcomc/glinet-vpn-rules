@@ -1,14 +1,19 @@
 # GL.iNet VPN subscription generator
 
+[![Validate generator](https://github.com/marcomc/glinet-vpn-subscription-generator/actions/workflows/validate.yml/badge.svg)](https://github.com/marcomc/glinet-vpn-subscription-generator/actions/workflows/validate.yml)
+
 This repository contains the source code and configuration that generate plain-text domain and IP routing subscriptions for the GL.iNet VPN client Subscription URL feature. Generated subscriptions are published separately in [glinet-vpn-subscription-lists](https://github.com/marcomc/glinet-vpn-subscription-lists).
 
 Other OpenWrt VPN clients can use the published lists only when their policy importer accepts the same one-rule-per-line domain and CIDR syntax.
+
+**Looking for a URL to paste into your router?** Start with the [ready-to-use subscriptions](https://github.com/marcomc/glinet-vpn-subscription-lists#quick-start). To request a provider, report a bad rule, or contribute a source, see [Contributing](CONTRIBUTING.md).
 
 ## Contents
 
 - [Repositories](#repositories)
 - [Generate and validate lists](#generate-and-validate-lists)
 - [Development](#development)
+- [Contributing](#contributing)
 - [Compatibility and data limitations](#compatibility-and-data-limitations)
 - [Source coverage](#source-coverage)
 - [Publication](#publication)
@@ -44,6 +49,10 @@ Run the offline unit suite with:
 ```sh
 python -m unittest discover -s tests -v
 ```
+
+## Contributing
+
+Open [a source request or list problem](https://github.com/marcomc/glinet-vpn-subscription-generator/issues/new/choose) in this repository. Pull requests should change the generator or its source configuration; the publication workflow updates the lists repository. The [contribution guide](CONTRIBUTING.md) explains the source and attribution requirements.
 
 ## Compatibility and data limitations
 

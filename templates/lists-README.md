@@ -6,11 +6,24 @@ Other OpenWrt VPN clients can use these lists when their policy importer accepts
 
 ## Contents
 
+- [Quick start](#quick-start)
 - [Choose a subscription](#choose-a-subscription)
 - [Subscription URLs](#subscription-urls)
 - [Migration](#migration)
 - [Compatibility and limitations](#compatibility-and-limitations)
 - [Updates and attribution](#updates-and-attribution)
+
+## Quick start
+
+Copy the Raw link address for the subscription you want and paste it into the GL.iNet VPN client's **Subscription URL** field. These examples are useful starting points:
+
+| Routing selection | Raw subscription | Notes |
+| --- | --- | --- |
+| Google | [google-all-combined-v4.txt](https://raw.githubusercontent.com/marcomc/glinet-vpn-subscription-lists/main/output/google/google-all-combined-v4.txt) | Domains and attributable IPv4 CIDRs |
+| Netflix | [netflix-all-combined-v4.txt](https://raw.githubusercontent.com/marcomc/glinet-vpn-subscription-lists/main/output/netflix/netflix-all-combined-v4.txt) | Domains and attributable IPv4 CIDRs |
+| OpenAI | [openai-all-domains.txt](https://raw.githubusercontent.com/marcomc/glinet-vpn-subscription-lists/main/output/openai/openai-all-domains.txt) | Domains only; published OpenAI IPs cover ChatGPT Voice servers, not general web/API destinations |
+
+Select **Specified Domain / IP List → Subscription URL**, paste the link, then select **Detect**. Confirm zero failed rules and test traffic through the intended VPN tunnel. If your firmware does not accept mixed domain/CIDR rules, choose a `-domains.txt` or `-ips-v4.txt` file instead. Browse the [complete catalog](#subscription-urls) for other providers and variants.
 
 ## Choose a subscription
 
@@ -31,12 +44,7 @@ IP variants exist only where an attributable provider-specific source is availab
 ## Subscription URLs
 
 Use the **Raw** URL of the desired file in the GL.iNet VPN client's Subscription URL field. The table is regenerated from the coverage report with each list update.
-
-In the GL.iNet VPN dashboard, edit or create a VPN policy, select **Specified
-Domain / IP List**, choose **Subscription URL**, and paste a Raw URL from the
-table. Select **Detect** and confirm that no lines fail, then apply the policy
-and test traffic through the intended VPN tunnel. Use a `-combined-v4.txt` list
-when the tunnel has no IPv6 route.
+Use a `-combined-v4.txt` list when the tunnel has no IPv6 route.
 
 <!-- BEGIN GENERATED CATALOG -->
 
@@ -62,3 +70,5 @@ Combined lists now use `-combined.txt`, `-combined-v4.txt`, and `-combined-v6.tx
 ## Updates and attribution
 
 Only the [generator workflow](https://github.com/marcomc/glinet-vpn-subscription-generator/blob/main/.github/workflows/update-lists.yml) publishes updates here. It runs when the generator's `main` branch changes, daily at 03:17 UTC, or on manual dispatch; new upstream data never changes the generator repository. See [license scope](LICENSE) and [data sources and licenses](DATA-LICENSES.md). The router's own automatic subscription refresh depends on its firmware and has not been verified.
+
+Report missing or incorrect rules and propose new sources in the [generator repository](https://github.com/marcomc/glinet-vpn-subscription-generator/issues/new/choose).
